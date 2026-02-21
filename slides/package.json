@@ -1,0 +1,14 @@
+{
+  "name": "intro-to-linux-slides",
+  "private": true,
+  "scripts": {
+    "dev": "slidev",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "dependencies": {
+    "@slidev/cli": "^51",
+    "@slidev/theme-seriph": "^0",
+    "playwright-chromium": "^1.58.2"
+  }
+}
