@@ -99,7 +99,7 @@ const missions = [
       },
       {
         id: '2.2',
-        text: 'Go back to `Round900` with `cd ..`, then create `A/tests` **without entering A** — use a path argument.',
+        text: 'Go back to `Round900` with `cd ..`, then create a directory`A/tests` **without entering A** — use a path argument.',
         hint: 'Type: cd ..  then  mkdir A/tests',
         validate: (fs, cwd) => {
           if (!cwd.endsWith('/Round900')) return false;
@@ -117,7 +117,7 @@ const missions = [
       },
       {
         id: '2.4',
-        text: 'Create `.flags` in Round900 and write compilation flags into it: `echo "-std=c++20 -O2 -Wall" > .flags`.',
+        text: 'Create a file `.flags` in Round900 and write compilation flags into it: `echo "-std=c++20 -O2 -Wall" > .flags`.',
         hint: 'Type: touch .flags  then  echo "-std=c++20 -O2 -Wall" > .flags',
         validate: (fs) => {
           const base = '/home/user/CP/Codeforces/Round900';
@@ -279,7 +279,7 @@ const missions = [
         validate: (_fs, _cwd, history) => {
           if (history.length === 0) return false;
           const last = history[history.length - 1].trim();
-          return last.startsWith('cat') && (last.includes('../.flags') || last.includes('.flags'));
+          return last.startsWith('cat') && last.includes('../.flags');
         },
       },
     ],
@@ -333,7 +333,7 @@ const missions = [
           const failedAttempt = history.some(
             (c) => {
               const t = c.trim();
-              return t === 'rm B/tests' || t === 'rm  B/tests';
+              return t.startsWith('rm') && !t.includes('-r') && t.includes('B/tests');
             },
           );
           const succeeded = history.some(

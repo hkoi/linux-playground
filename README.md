@@ -1,16 +1,55 @@
-# React + Vite
+# Linux Playground
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive browser-based Linux terminal simulator built to assist teaching the **Introduction to Linux** lecture during [HKOI](https://hkoi.org/) training.
 
-Currently, two official plugins are available:
+This is a vibed coded project.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## What it does
 
-## React Compiler
+Students work through 6 guided mission levels, from basic navigation and file creation to compiling C++ with `g++` and running contest-style workflows. All inside a virtual filesystem that runs entirely in the browser.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local development
 
-## Expanding the ESLint configuration
+```bash
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Production build:
+
+```bash
+npm run build
+npm run preview
+```
+
+## Deployment
+
+The app deploys to **GitHub Pages** automatically on every push to `main` via the workflow in `.github/workflows/deploy.yml`.
+
+To enable it on a new fork:
+
+1. Go to **Settings > Pages** in your GitHub repo.
+2. Set **Source** to **GitHub Actions**.
+3. Push to `main` — the site will be live at `https://<user>.github.io/linux-playground/`.
+
+## Architecture
+
+```
+src/
+  lib/
+    virtualFS.js      Immutable tree-based virtual filesystem
+    commandParser.js   Tokenizer + handlers for each shell command
+    missions.js        Mission definitions with validator functions
+  context/
+    FileSystemContext.jsx   Global state, validation loop, localStorage persistence
+  components/
+    Terminal.jsx       Terminal UI with tab-completion and history
+    MissionPanel.jsx   Mission sidebar with progress tracking and hints
+  App.jsx             Responsive layout (desktop two-column, mobile tab toggle)
+```
+
+## Troubleshooting
+
+**Mission appears stuck after refresh** — The app re-validates mission state on load. If you still hit an issue, click the reset button (top-right of the mission panel) twice to start fresh.
+
+**State is persisted in localStorage** under the key `linux-playground-state`. Clearing site data in your browser fully resets everything.

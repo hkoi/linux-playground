@@ -36,15 +36,31 @@ export function FileSystemProvider({ children }) {
   const [fsState, setFsState] = useState(() => _initial?.fsState ?? createDefaultFS());
   const [currentDir, setCurrentDir] = useState(() => _initial?.currentDir ?? DEFAULT_DIR);
   const [commandHistory, setCommandHistory] = useState(() => _initial?.commandHistory ?? []);
-  const [substepStatus, setSubstepStatus] = useState(() => _initial?.substepStatus ?? initSubstepStatus());
+  const [substepStatus, setSubstepStatus] = useState(() => {
+    const base = _initial?.substepStatus ?? initSubstepStatus();
+    if (!_initial) return base;
+    const next = { ...base };
+    let changed = false;
+    const fs = _initial.fsState;
+    const cwd = _initial.currentDir;
+    const hist = _initial.commandHistory ?? [];
+    for (const level of missions) {
+      if (level.id > (_initial.unlockedLevel ?? 1) + 1) continue;
+      const firstIncompleteIdx = level.substeps.findIndex((s) => !next[s.id]);
+      if (firstIncompleteIdx === -1) continue;
+      const step = level.substeps[firstIncompleteIdx];
+      try {
+        if (step.validate(fs, cwd, hist)) {
+          next[step.id] = true;
+          changed = true;
+        }
+      } catch { /* ignore */ }
+    }
+    return changed ? next : base;
+  });
   const [unlockedLevel, setUnlockedLevel] = useState(() => _initial?.unlockedLevel ?? 1);
   const [activeLevel, setActiveLevel] = useState(() => _initial?.activeLevel ?? 1);
   const [justCompletedLevel, setJustCompletedLevel] = useState(null);
-
-  // Debug: Log on mount
-  useEffect(() => {
-    console.log('🚀 FileSystemProvider mounted | Loaded from localStorage:', !!_initial);
-  }, []);
 
   // ── Refs: always hold latest values for use inside callbacks & timers ──
   const stateRef = useRef({

@@ -160,6 +160,19 @@ export default function Terminal() {
   // ── Keyboard ────────────────────────────────────────────────────────────
   const handleKeyDown = useCallback(
     (e) => {
+      if (e.key === 'c' && e.ctrlKey) {
+        e.preventDefault();
+        if (inputValue) {
+          setHistory((prev) => [
+            ...prev,
+            { type: 'input', text: inputValue + '^C', dir: cwdRef.current },
+          ]);
+          setInputValue('');
+          setCursorPos(0);
+          setHistoryIdx(-1);
+        }
+        return;
+      }
       if (e.key === 'Enter') {
         e.preventDefault();
         handleSubmit();
@@ -248,7 +261,7 @@ export default function Terminal() {
           <span className="text-green-400 font-bold">user@linux</span>
           <span className="text-slate-500">:</span>
           <span className="text-blue-400 font-bold">{pp}</span>
-          <span className="text-slate-500">$ </span>
+          <span className="text-slate-500">$&nbsp;</span>
           <div className="relative flex-1">
             <input
               ref={inputRef}
