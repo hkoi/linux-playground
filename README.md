@@ -1,8 +1,10 @@
 # Linux Playground
 
+Access the playground [HERE](https://hkoi.github.io/linux-playground/).
+
 An interactive browser-based Linux terminal simulator built to assist teaching the **Introduction to Linux** lecture during [HKOI](https://hkoi.org/) training.
 
-This is a vibed coded project.
+This is a vibed-coded project.
 
 ## What it does
 
